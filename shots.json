@@ -444,24 +444,24 @@
   "do": "Click the summary.",
   "say": "In Packages, the vulnerable libraries: 42 critical, 128 high, 103 medium and 15 low.",
   "hotspot": [
-   5.3,
-   53.7,
-   43.6,
-   7.4
+   4.9,
+   50,
+   41.4,
+   7.1
   ],
   "mark": "#ffd60a"
  },
  {
   "scene": "7. Secure Coder",
   "id": "22a2-sc-critical",
-  "capture": "Packages, filtered: Critical + With Patch, 41 findings",
+  "capture": "Packages, filtered With Patch: 41 critical, 123 high, 97 medium, 14 low",
   "do": "Click the filters.",
-  "say": "That is too many to start with. So the developer filters: critical, and a patch is available. 41 of the 42 critical findings can be fixed today.",
+  "say": "That is a lot to start with. So the developer filters on what can be fixed today, where a patch is available: 41 critical, 123 high, 97 medium and 14 low. Critical first.",
   "hotspot": [
-   5.2,
-   35,
-   43.7,
-   25.3
+   4.9,
+   33.1,
+   41.4,
+   24
   ],
   "mark": "#ffd60a"
  },

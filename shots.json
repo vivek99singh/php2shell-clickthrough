@@ -554,7 +554,7 @@
   "id": "22h-sc-prcreated",
   "capture": "Pull request #4 created",
   "do": "Click the PR link.",
-  "say": "Pull request 4 is open, on its own branch.",
+  "say": "Pull request 4 is open in ecommerce-app, on its own branch.",
   "hotspot": [
    7.5,
    47.2,

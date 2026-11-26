@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>/*TITLE*/</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:#161616;color:#f4f4f4;font:15px/1.45 "IBM Plex Sans",system-ui,sans-serif;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
+header,footer{display:flex;align-items:center;gap:12px;padding:8px 16px;background:#262626}
+header{flex-wrap:wrap}#title{font-weight:600;margin-right:8px;white-space:nowrap}
+#scenes{display:flex;gap:4px;flex-wrap:wrap}
+button{font:inherit;color:#f4f4f4;background:#393939;border:0;padding:6px 12px;cursor:pointer}
+button:hover{background:#525252}button:focus-visible,.hot:focus-visible{outline:2px solid #fff;outline-offset:2px}
+button[aria-current=true],#next{background:#0f62fe}button:disabled{opacity:.4;cursor:default}
+main{position:relative;display:flex;align-items:center;justify-content:center;min-width:0}
+#stage{position:relative}#stage img{display:block;user-select:none;-webkit-user-drag:none}
+.ph{width:min(900px,92vw);padding:60px 40px;background:#262626;border:2px dashed #6f6f6f;text-align:center}
+.hot{position:absolute;padding:0;border:0;box-sizing:border-box;--c:#ffd60a;--n:22px;--t:4px;background:
+linear-gradient(var(--c) 0 0) 0 0/var(--n) var(--t),linear-gradient(var(--c) 0 0) 0 0/var(--t) var(--n),
+linear-gradient(var(--c) 0 0) 100% 0/var(--n) var(--t),linear-gradient(var(--c) 0 0) 100% 0/var(--t) var(--n),
+linear-gradient(var(--c) 0 0) 0 100%/var(--n) var(--t),linear-gradient(var(--c) 0 0) 0 100%/var(--t) var(--n),
+linear-gradient(var(--c) 0 0) 100% 100%/var(--n) var(--t),linear-gradient(var(--c) 0 0) 100% 100%/var(--t) var(--n);
+background-repeat:no-repeat;filter:drop-shadow(0 0 3px rgba(0,0,0,.55));animation:p 1.6s ease-in-out infinite}
+.hot:hover,.hot:active{outline:0;background-color:transparent}
+.hot:focus-visible{outline:2px dashed var(--c);outline-offset:4px}
+@keyframes p{50%{opacity:.55}}
+@media(prefers-reduced-motion:reduce){.hot{animation:none}}
+#do{flex:1;min-width:0}#count{font-variant-numeric:tabular-nums;color:#c6c6c6;white-space:nowrap}
+.panel{position:fixed;right:16px;bottom:64px;width:min(440px,90vw);max-height:60vh;overflow:auto;padding:16px;background:#fff;color:#161616;font-size:17px;box-shadow:0 8px 30px #000}
+.panel kbd{font:13px ui-monospace,monospace;background:#e0e0e0;padding:1px 5px;border-radius:3px}
+.panel table{border-collapse:collapse;width:100%;font-size:15px}.panel td{padding:3px 6px;vertical-align:top}
+/* edit mode: draw a hotspot */
+body.edit main{cursor:crosshair}body.edit .hot{pointer-events:none;opacity:.35;animation:none}
+#box{position:absolute;border:2px dashed #ff3b30;background:rgba(255,59,48,.12);pointer-events:none}
+#editbar{position:fixed;left:16px;bottom:64px;max-width:min(560px,90vw);padding:10px 14px;background:#ff3b30;color:#fff;font-size:14px}
+#editbar code{font:14px ui-monospace,monospace;background:rgba(0,0,0,.25);padding:2px 6px}
+@media(max-width:700px){#title{display:none}footer{flex-wrap:wrap}#do{flex-basis:100%;order:-1}}
+[hidden]{display:none!important}
+</style>
+<header><span id="title"></span><nav id="scenes" aria-label="Scenes"></nav></header>
+<main><div id="stage"></div></main>
+<aside id="notes" class="panel" hidden></aside>
+<aside id="help" class="panel" hidden>
+<p style="margin-top:0"><b>How to use</b></p>
+<table>
+<tr><td><kbd>→</kbd> or click the highlight</td><td>Next step</td></tr>
+<tr><td><kbd>←</kbd></td><td>Back</td></tr>
+<tr><td><kbd>N</kbd></td><td>Speaker notes (what to say)</td></tr>
+<tr><td><kbd>Home</kbd></td><td>First screen</td></tr>
+<tr><td><kbd>E</kbd></td><td>Edit mode: drag a box on the screen to get its hotspot values</td></tr>
+<tr><td><kbd>?</kbd></td><td>This help</td></tr>
+</table>
+<p style="margin-bottom:0">Each screen has its own link: the number after <b>#</b> in the address bar.</p>
+</aside>
+<div id="editbar" hidden>Edit mode: drag a box on the screenshot. <span id="out"></span></div>
+<footer><button id="back">Back</button><span id="do"></span><span id="count"></span><button id="help-b" aria-label="Help">?</button><button id="note">Notes (N)</button><button id="next">Next</button></footer>
+<script>
+const S=/*SHOTS*/[],TITLE=/*TITLEJS*/"",$=q=>document.getElementById(q);let i=0,k=0;
+$('title').textContent=TITLE;
+const scenes=[...new Set(S.map(s=>s.scene))];
+scenes.forEach(n=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>go(S.findIndex(s=>s.scene===n));$('scenes').append(b)});
+function fit(){const im=$('stage').querySelector('img');if(!im||!im.naturalWidth)return;const m=document.querySelector('main'),k=Math.min(m.clientWidth/im.naturalWidth,m.clientHeight/im.naturalHeight);im.style.width=im.naturalWidth*k+'px';im.style.height=im.naturalHeight*k+'px'}
+function go(n,last){k=0;i=Math.max(0,Math.min(S.length-1,n));const s=S[i],st=$('stage');st.replaceChildren();
+if(s.img){const im=new Image();im.alt=s.do;im.onload=fit;im.src=s.img;st.append(im);
+if(last&&s.steps)k=s.steps.length-1;mark()}
+else{const d=document.createElement('div');d.className='ph';d.textContent='Screenshot needed: '+s.id+'.png. '+(s.capture||'');st.append(d)}
+$('do').textContent=s.do;$('notes').textContent=s.say||'';$('count').textContent=(i+1)+' / '+S.length;$('back').disabled=!i;$('next').disabled=i===S.length-1;
+[...$('scenes').children].forEach(b=>b.setAttribute('aria-current',b.textContent===s.scene));
+try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+function mark(){const s=S[i],st=$('stage'),b=s.steps?s.steps[k]:s.hotspot;st.querySelector('.hot')?.remove();if(!b)return;const h=document.createElement('button'),[l,t,w,e]=b;h.className='hot';h.setAttribute('aria-label',s.do);h.style.setProperty('--c',s.mark||'#ffd60a');
+Object.assign(h.style,{left:`calc(${l}% - 8px)`,top:`calc(${t}% - 8px)`,width:`calc(${w}% + 16px)`,height:`calc(${e}% + 16px)`});h.onclick=fwd;st.append(h)}
+function fwd(){const s=S[i];if(s.steps&&k<s.steps.length-1){k++;mark()}else if(i<S.length-1)go(i+1)}
+function back(){const s=S[i];if(s.steps&&k>0){k--;mark()}else if(i)go(i-1,true)}
+const toggle=id=>{$(id).hidden=!$(id).hidden};
+// edit mode: draw a box, get [left, top, width, height] in % of the screenshot
+let editing=false,start=null;
+function edit(){editing=!editing;document.body.classList.toggle('edit',editing);$('editbar').hidden=!editing;$('out').textContent='';$('box')?.remove()}
+function pct(e){const im=$('stage').querySelector('img'),r=im.getBoundingClientRect();return[Math.min(100,Math.max(0,(e.clientX-r.left)/r.width*100)),Math.min(100,Math.max(0,(e.clientY-r.top)/r.height*100))]}
+$('stage').addEventListener('pointerdown',e=>{if(!editing||!$('stage').querySelector('img'))return;e.preventDefault();start=pct(e);$('box')?.remove();const b=document.createElement('div');b.id='box';$('stage').append(b)});
+addEventListener('pointermove',e=>{if(!start)return;const p=pct(e),l=Math.min(start[0],p[0]),t=Math.min(start[1],p[1]);Object.assign($('box').style,{left:l+'%',top:t+'%',width:Math.abs(p[0]-start[0])+'%',height:Math.abs(p[1]-start[1])+'%'})});
+addEventListener('pointerup',e=>{if(!start)return;const p=pct(e),r=v=>Math.round(v*100)/100,v=[r(Math.min(start[0],p[0])),r(Math.min(start[1],p[1])),r(Math.abs(p[0]-start[0])),r(Math.abs(p[1]-start[1]))];start=null;
+const txt='"hotspot": ['+v.join(', ')+']';$('out').innerHTML='';const c=document.createElement('code');c.textContent=txt;$('out').append(c);
+try{navigator.clipboard.writeText(txt).then(()=>$('out').append(' copied'),()=>{})}catch(err){}});
+$('back').onclick=back;$('next').onclick=fwd;$('note').onclick=()=>toggle('notes');$('help-b').onclick=()=>toggle('help');
+addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;
+if(e.key==='ArrowRight'||e.key==='PageDown')fwd();else if(e.key==='ArrowLeft'||e.key==='PageUp')back();else if(e.key==='n'||e.key==='N')toggle('notes');
+else if(e.key==='?')toggle('help');else if(e.key==='e'||e.key==='E')edit();else if(e.key==='Escape'){if(editing)edit();$('help').hidden=true}else if(e.key==='Home')go(0)});
+addEventListener('resize',fit);addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(n&&n-1!==i)go(n-1)});
+go((parseInt(location.hash.slice(1))||1)-1);
+</script></html>

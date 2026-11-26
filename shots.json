@@ -1,0 +1,608 @@
+[
+ {
+  "scene": "1. Problem",
+  "id": "01-advisory",
+  "capture": "PHP advisory on GitHub: Critical and fixed version 8.3.36 visible",
+  "do": "Point at Critical and 8.3.36.",
+  "say": "I will take you through this in a click-through, recorded on our own OpenShift cluster. This is PHP2SHELL, a critical remote code execution vulnerability in PHP. An attacker could run code on your server. The good news is that the patch is already out, in PHP 8.3.36.",
+  "hotspot": [
+   2.5,
+   36.22,
+   71.25,
+   21.11
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "1. Problem",
+  "id": "02-storefront",
+  "capture": "Storefront home with the yellow bar: Running on PHP 8.3.35",
+  "do": "Click the yellow bar: PHP 8.3.35.",
+  "say": "And this is our online storefront, a sample shop running on OpenShift. It is on 8.3.35, the vulnerable version. So we have three questions. Where are we exposed? What do we fix first? And how do we prove that the fix shipped?",
+  "hotspot": [
+   6.44,
+   0.78,
+   17.12,
+   4.67
+  ],
+  "mark": "#ff3b30"
+ },
+ {
+  "scene": "2. Scan",
+  "id": "03a-pipeline",
+  "capture": "Actions, Concert image scan: list of runs",
+  "do": "Point at the pipeline, Concert image scan, then click the latest run.",
+  "say": "Let’s start with how the data gets into Concert. This is our GitHub Actions pipeline. It starts by itself whenever the team changes the application code or the Dockerfile on the main branch. The Dockerfile says which PHP image we build on.",
+  "hotspot": [
+   27.0,
+   31.89,
+   71.0,
+   9.11
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "2. Scan",
+  "id": "03-actions-run",
+  "capture": "storefront-php, Actions, latest run on main: job list",
+  "do": "Click the techzone job.",
+  "say": "Here is the latest run, on the main branch. Let me open it.",
+  "hotspot": [
+   30.0,
+   66.67,
+   22.38,
+   5.33
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "2. Scan",
+  "id": "04-scan-upload",
+  "capture": "techzone job: Scan with Grype expanded, Upload to TechZone Concert visible",
+  "do": "Point at Build and deploy, Scan with Grype and Upload, then click.",
+  "say": "It does four things. First, it builds the image on OpenShift. Second, it deploys the application. Third, it scans the build for known vulnerabilities. And fourth, it sends the results to Concert. Nobody uploads anything by hand. The scanner is Grype, an open-source tool. Concert does not ask you to replace the scanners you already use. It takes their results and connects them to your applications.",
+  "hotspot": [
+   29.88,
+   63.22,
+   67,
+   22.0
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "2. Scan",
+  "id": "05-concert-protect",
+  "capture": "Concert, Protect: CVE-2026-109618, Overview",
+  "do": "Point at Critical and 9.8, then click.",
+  "say": "The scan found the issue, and here it is, reflected in IBM Concert Protect. This is PHP2SHELL, CVE-2026-109618. It is critical, with a CVSS score of 9.8.",
+  "hotspot": [
+   6.12,
+   26.22,
+   90.25,
+   9.33
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "3. Understand",
+  "id": "05b-impacted",
+  "capture": "CVE page, Applications impacted, 1.0.2 only",
+  "do": "Point at the two applications and their criticality, then click.",
+  "say": "And this is where we see the impact. Two of our applications carry this CVE: the storefront, and our internal reporting tool, which is built on the same base image. In a spreadsheet, these would be two unrelated lines. Concert also shows how critical each one is: very high for the storefront, low for the reports.",
+  "hotspot": [
+   4.12,
+   58.67,
+   60.0,
+   10.44
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "3. Understand",
+  "id": "05c-blast-radius",
+  "capture": "CVE page, Blast radius, 1.0.2 only",
+  "do": "Click once for each part: CVE, packages, images, applications, production.",
+  "say": "And the blast radius shows how far it reaches: from the CVE, to the PHP packages, to the images, to the applications, and into production.",
+  "hotspot": [
+   10.31,
+   58.33,
+   73.75,
+   32.22
+  ],
+  "mark": "#ffd60a",
+  "steps": [
+   [
+    10.31,
+    72.22,
+    8.0,
+    9.56
+   ],
+   [
+    25.5,
+    64.44,
+    10.5,
+    16.11
+   ],
+   [
+    41.25,
+    58.22,
+    13.5,
+    22.22
+   ],
+   [
+    57.0,
+    58.22,
+    13.38,
+    22.22
+   ],
+   [
+    72.5,
+    67.56,
+    11.25,
+    10.0
+   ]
+  ]
+ },
+ {
+  "scene": "3. Understand",
+  "id": "06-storefront-cve",
+  "capture": "Concert: storefront-php 1.0.2, CVE findings, search CVE-2026-109618",
+  "do": "Click CVE-2026-109618.",
+  "say": "Now let’s open the storefront application. I have filtered for the PHP2SHELL CVE. Here it is, on the PHP package, version 8.3.35.",
+  "hotspot": [
+   77.12,
+   59.11,
+   10.75,
+   5.11
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "3. Understand",
+  "id": "07-fixed-in",
+  "capture": "Same page: Fixed in value visible (skip if not shown)",
+  "do": "Click Fixed in.",
+  "say": "Concert also lists the available fix: upgrade PHP to 8.3.36. The team sees it right next to the finding, so nobody has to go and research it. So, which application do we fix first?",
+  "hotspot": [
+   46.25,
+   59.11,
+   16.38,
+   5.11
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "4. Prioritize",
+  "id": "10-storefront-risk",
+  "capture": "Storefront finding: CVSS 9.8, environmental 1.12, risk 10, Priority 1",
+  "do": "Click Priority 1, risk 10.",
+  "say": "Look at the storefront. The CVSS score is 9.8. Concert then adds context. The storefront is public, business-critical, and holds sensitive data. That pushes the risk score to the maximum, 10. Priority 1.",
+  "hotspot": [
+   6.25,
+   57.78,
+   49.38,
+   6.67
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "4. Prioritize",
+  "id": "11-reports-risk",
+  "capture": "Internal reports finding: CVSS 9.8, environmental 0.38, risk 4.7, Priority 3",
+  "do": "Point at Priority 3, risk 4.7. Pause two seconds, then click.",
+  "say": "Now the same vulnerability on the reporting tool. The same CVSS, 9.8. But this application is internal, with low criticality. The risk score is 4.7. Priority 3. Same CVE. Same CVSS. Two very different priorities. If you rank by CVSS alone, both of these sit at the top of your list. With Concert, the team knows to fix the storefront first. The reporting tool is not forgotten. It simply comes next.",
+  "hotspot": [
+   6.25,
+   57.78,
+   49.38,
+   6.67
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "5. Act",
+  "id": "12-open-ticket",
+  "capture": "Concert: storefront finding with the ticket link",
+  "do": "Click Open ticket.",
+  "say": "We know where we are exposed and what comes first. Now we act. From the finding, I open a ticket.",
+  "hotspot": [
+   82.5,
+   59.11,
+   8.75,
+   4.89
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "5. Act",
+  "id": "12b-ticket-form",
+  "capture": "Open a ticket form",
+  "do": "Point at the connection, the repository and the title, then click.",
+  "say": "Concert fills in the title and the details from the finding. I choose where it goes: GitHub, Jira, ServiceNow, Salesforce or GitLab. And I assign an owner.",
+  "hotspot": [
+   27.25,
+   32.22,
+   65.62,
+   56.11
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "5. Act",
+  "id": "13-github-issue",
+  "capture": "The GitHub issue, with owner and priority",
+  "do": "Click the issue title.",
+  "say": "Here it is as a GitHub issue, with the priority, the risk score and the affected package. It has an owner, so it will not get lost.",
+  "hotspot": [
+   1.75,
+   17.56,
+   64.38,
+   10.89
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "5. Act",
+  "id": "14-watsonx",
+  "capture": "Ask watsonx with the answer to: Summarize CVE-2026-109618",
+  "do": "Click the watsonx answer.",
+  "say": "If the team needs more background, they can ask watsonx, right here in Concert, and get a summary in plain language. As always with AI, we check it against the source.",
+  "hotspot": [
+   75.38,
+   25.0,
+   23.5,
+   51.67
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "5. Act",
+  "id": "15-workflow",
+  "capture": "Concert Workflows: Dockerfile_Base_Image_Upgrade",
+  "do": "Click Run. This is only a picture; nothing runs.",
+  "say": "To fix it, we use a Concert workflow from the library. It raises a pull request that upgrades the base image.",
+  "hotspot": [
+   82.62,
+   50.0,
+   4.62,
+   4.44
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "5. Act",
+  "id": "15b-inputs",
+  "capture": "Point at target and new_version, then click.",
+  "do": "Point at target and new_version, then click.",
+  "say": "We give it the repository, the image, and the version to move to: PHP, from 8.3.35 to 8.3.36.",
+  "hotspot": [
+   22.0,
+   51.33,
+   56.0,
+   15.56
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "5. Act",
+  "id": "15c-output",
+  "capture": "Click the pull request link.",
+  "do": "Click the pull request link.",
+  "say": "It runs, and gives us back the link to a pull request.",
+  "hotspot": [
+   22.0,
+   56.11,
+   56.0,
+   5.56
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "5. Act",
+  "id": "17-pr-diff",
+  "capture": "The workflow pull request, Files changed: 8.3.35 to 8.3.36",
+  "do": "Click the changed line.",
+  "say": "This is that pull request. One line changes, from 8.3.35 to 8.3.36. Nothing is applied until a person approves it.",
+  "hotspot": [
+   27.0,
+   47.56,
+   70.5,
+   6.67
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "5. Act",
+  "id": "17b-pr-open",
+  "capture": "Point at Open and at the checks, then click.",
+  "do": "Point at Open and at the checks, then click.",
+  "say": "The pull request is open, and the checks have passed.",
+  "hotspot": [
+   7.0,
+   80.22,
+   63.38,
+   18.89
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "5. Act",
+  "id": "18-pr-check",
+  "capture": "The pull request check, Summary: PHP2SHELL not found",
+  "do": "Click PHP2SHELL: not found.",
+  "say": "Before anyone approves, the pipeline has already rebuilt the image and scanned it again. PHP2SHELL: not found. So the reviewer can approve with evidence.",
+  "hotspot": [
+   30.62,
+   47.78,
+   15.62,
+   4.0
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "6. Proof",
+  "id": "23-pr4-merged",
+  "capture": "storefront-php PR 4: Merged",
+  "do": "Click Merged.",
+  "say": "Last question: how do we prove it? This is the same pull request. It is now merged.",
+  "hotspot": [
+   2.38,
+   23.78,
+   7.75,
+   4.89
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "6. Proof",
+  "id": "24-merge-run",
+  "capture": "Run 45161191875, Summary: PHP2SHELL not found",
+  "do": "Click PHP2SHELL: not found.",
+  "say": "The merge starts the pipeline again. It deploys PHP 8.3.36 on OpenShift, and scans the new build. PHP2SHELL: not found.",
+  "hotspot": [
+   30.62,
+   39.0,
+   15.62,
+   4.0
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "6. Proof",
+  "id": "24b-storefront-fixed",
+  "capture": "Click the green bar.",
+  "do": "Click the green bar.",
+  "say": "And this is the storefront again, now on PHP 8.3.36.",
+  "hotspot": [
+   6.44,
+   0.78,
+   17.12,
+   4.67
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "6. Proof",
+  "id": "25-closed",
+  "capture": "Concert: storefront-php 1.0.2, the Closed PHP2SHELL row",
+  "do": "Point at Closed, then click.",
+  "say": "And in Concert, the finding is closed. Nobody ticked a box. It closed because the next scan no longer found the vulnerability. When we checked, less than five minutes after the merge, it was done.",
+  "hotspot": [
+   65.31,
+   59.11,
+   15.31,
+   13.56
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "6. Proof",
+  "id": "26-issue-closed",
+  "capture": "Issue 5, closed",
+  "do": "Point at Done and closed as completed. End of the PHP story.",
+  "say": "And the owner closes the ticket, now with the evidence behind it. So for the PHP fix: we found every application that carries the CVE, we knew which one to fix first, and we have evidence that the fix worked.",
+  "hotspot": [
+   2.38,
+   92.0,
+   29.38,
+   7.78
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22-sc-repo",
+  "capture": "GitHub: vivek99singh/ecommerce-app, the Java sample repository",
+  "do": "Click the repository name.",
+  "say": "That was a vulnerability in something already running, from the advisory to the closed ticket. It is cheaper to catch it while the developer is still writing code. For this part we use a different sample application: ecommerce-app, a small Java application, here in GitHub. Its pom.xml still uses log4j 2.14.1.",
+  "hotspot": [
+   1.75,
+   11.7,
+   19.5,
+   4.4
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22a-sc-overview",
+  "capture": "Secure Coder overview in IBM Bob: 289 issues",
+  "do": "Click Action required.",
+  "say": "The developer opens this repository in the IDE, IBM Bob, where IBM Concert Secure Coder runs. One scan: 289 security issues in ecommerce-app.",
+  "hotspot": [
+   8.9,
+   67.9,
+   74.7,
+   18
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22a1-sc-packages",
+  "capture": "Packages before the fix: 42 critical, 128 high, 103 medium, 15 low",
+  "do": "Click the summary.",
+  "say": "In Packages, the vulnerable libraries: 42 critical, 128 high, 103 medium and 15 low.",
+  "hotspot": [
+   5.3,
+   53.7,
+   43.6,
+   7.4
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22a2-sc-critical",
+  "capture": "Packages, filtered: Critical + With Patch, 41 findings",
+  "do": "Click the filters.",
+  "say": "That is too many to start with. So the developer filters: critical, and a patch is available. 41 of the 42 critical findings can be fixed today.",
+  "hotspot": [
+   5.2,
+   35,
+   43.7,
+   25.3
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22b-sc-finding",
+  "capture": "Packages tab: log4j-core 2.14.1, CVE-2021-44228, with pom.xml",
+  "do": "Click the log4j finding.",
+  "say": "One of them is log4j-core 2.14.1: Log4Shell, CVE-2021-44228. On the right you can see the exact line in pom.xml.",
+  "hotspot": [
+   5,
+   47.4,
+   41.3,
+   15.4
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22c-sc-fix",
+  "capture": "Risk & impact, root cause, Fix button",
+  "do": "Click Fix.",
+  "say": "It explains the risk in plain words and the root cause: a hard-coded version in pom.xml. Then one click: Fix.",
+  "hotspot": [
+   40,
+   92.2,
+   5.6,
+   5.6
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22d-sc-precheck",
+  "capture": "Pre-check: READY FOR EXECUTION",
+  "do": "Click READY.",
+  "say": "Before it changes anything, it checks the workspace, the build tools and the registries. Verdict: ready.",
+  "hotspot": [
+   7.5,
+   63,
+   33.1,
+   4.8
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22e-sc-plan",
+  "capture": "Plan: log4j-core 2.14.1 to 2.17.1 on a new branch",
+  "do": "Click the version change.",
+  "say": "Then it shows the plan: a new branch, and log4j-core from 2.14.1 to 2.17.1. Nothing happens until the developer agrees.",
+  "hotspot": [
+   7.5,
+   71.4,
+   33.2,
+   5.7
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22f-sc-proceed",
+  "capture": "Proceed to execution",
+  "do": "Click Proceed to execution.",
+  "say": "The developer clicks Proceed.",
+  "hotspot": [
+   7.5,
+   64.1,
+   12.1,
+   4.5
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22g-sc-createpr",
+  "capture": "Verified: READY FOR PULL REQUEST, Create PR",
+  "do": "Click Create PR.",
+  "say": "In about 40 seconds it has edited pom.xml, compiled the project and rescanned it. Ready for a pull request. Create PR.",
+  "hotspot": [
+   7.5,
+   64.4,
+   7.3,
+   4.4
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22h-sc-prcreated",
+  "capture": "Pull request #4 created",
+  "do": "Click the PR link.",
+  "say": "Pull request 4 is open, on its own branch.",
+  "hotspot": [
+   7.5,
+   47.2,
+   33.2,
+   5.7
+  ],
+  "mark": "#ffd60a"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22i-sc-diff",
+  "capture": "GitHub PR #4, files changed",
+  "do": "Click the changed lines.",
+  "say": "On GitHub the reviewer sees a small, clear change: log4j 2.14.1 becomes 2.17.1. It is reviewed like any other change.",
+  "hotspot": [
+   26.9,
+   69.4,
+   70.6,
+   19.4
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22j-sc-merged",
+  "capture": "GitHub PR #4: Merged",
+  "do": "Click Merged.",
+  "say": "The developer merges it.",
+  "hotspot": [
+   2.5,
+   33.3,
+   7.5,
+   4.7
+  ],
+  "mark": "#d9480f"
+ },
+ {
+  "scene": "7. Secure Coder",
+  "id": "22l-sc-packages",
+  "capture": "Packages after: 40 critical, log4j-core 2.17.1",
+  "do": "Click the summary. This is the last screen.",
+  "say": "And the proof: after the merge, a rescan. Now it is 40 critical, 127 high, 102 medium and 15 low. Before, it was 42 critical. The two critical Log4Shell findings are gone; the vulnerable version was caught before it shipped. So: Concert proves the fix in what is running, and Secure Coder stops the next one before it ships. Let’s go back to the slides.",
+  "hotspot": [
+   5.2,
+   52.8,
+   43.7,
+   7.6
+  ],
+  "mark": "#ffd60a"
+ }
+]

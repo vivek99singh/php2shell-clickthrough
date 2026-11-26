@@ -45,7 +45,7 @@
   "scene": "2. Scan",
   "id": "03-actions-run",
   "capture": "storefront-php, Actions, latest run on main: job list",
-  "do": "Click the techzone job.",
+  "do": "Click the second job, which builds, deploys and scans.",
   "say": "Here is the latest run, on the main branch. Let me open it.",
   "hotspot": [
    30.0,
@@ -58,7 +58,7 @@
  {
   "scene": "2. Scan",
   "id": "04-scan-upload",
-  "capture": "techzone job: Scan with Grype expanded, Upload to TechZone Concert visible",
+  "capture": "Second job: Scan with Grype expanded, the upload to Concert visible",
   "do": "Point at Build and deploy, Scan with Grype and Upload, then click.",
   "say": "It does four things. First, it builds the image on OpenShift. Second, it deploys the application. Third, it scans the build for known vulnerabilities. And fourth, it sends the results to Concert. Nobody uploads anything by hand. The scanner is Grype, an open-source tool. Concert does not ask you to replace the scanners you already use. It takes their results and connects them to your applications.",
   "hotspot": [

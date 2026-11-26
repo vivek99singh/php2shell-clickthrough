@@ -7,7 +7,7 @@ To replace one, save a new picture with the same name in `screens/`, then run `p
 | 1 | `01-advisory.png` | Point at Critical and 8.3.36. |
 | 2 | `02-storefront.png` | Click the yellow bar: PHP 8.3.35. |
 | 3 | `03a-pipeline.png` | Point at the pipeline, Concert image scan, then click the latest run. |
-| 4 | `03-actions-run.png` | Click the techzone job. |
+| 4 | `03-actions-run.png` | Click the second job, which builds, deploys and scans. |
 | 5 | `04-scan-upload.png` | Point at Build and deploy, Scan with Grype and Upload, then click. |
 | 6 | `05-concert-protect.png` | Point at Critical and 9.8, then click. |
 | 7 | `05b-impacted.png` | Point at the two applications and their criticality, then click. |

@@ -80,7 +80,7 @@ flowchart LR
 | **6. Proof** | 23–27 | Merge, rebuild and redeploy. The next scan no longer finds the CVE, so Concert closes the finding, and the ticket is closed. |
 | **7. Secure Coder** | 28–41 | Shift left: IBM Concert Secure Coder, inside IBM Bob, fixes Log4Shell in a Java app before it ships, from the scan to the merged pull request and the rescan. |
 
-**Where it was recorded:** IBM TechZone, IBM Concert 3.1.0, and the GitHub repositories `storefront-php` and `ecommerce-app`, on 25 and 26 November 2026.
+**Where it was recorded:** IBM Concert 3.1.0, with the GitHub repositories `storefront-php` and `ecommerce-app`, on 25 and 26 November 2026.
 
 **Honest about edits:** every screen is from a real run. A few were lightly cleaned for clarity: an old commit message hidden, a toast or floating button removed, an inaccurate table in a generated pull request description hidden. No result was changed.
 

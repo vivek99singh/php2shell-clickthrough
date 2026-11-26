@@ -222,16 +222,6 @@ python3 build.py --title "My demo" --out my-demo.html --max-width 2000
 
 ---
 
-## Lessons from building this one
-
-- **Run the story end to end once before capturing anything.** Problems show up in the flow, not on single screens.
-- **One story per scene.** Secure Coder first sat between the pull request and its merge, and the story broke. It now has its own scene at the end.
-- **Compare like with like.** If you show "42 critical" before, show the same unfiltered view after.
-- **Check every screen at full size** for floating buttons ("Latest", "Scroll to bottom"), mouse cursors and toasts before you build.
-- **Reset the environment after recording** (revert the fix, close test tickets) so you can record again.
-
----
-
 ## Troubleshooting
 
 | Problem | Fix |

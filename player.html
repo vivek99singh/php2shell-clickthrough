@@ -1,14 +1,15 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>/*TITLE*/</title>
 <style>
-:root{color-scheme:dark}
+:root{color-scheme:dark;--ease-out:cubic-bezier(.23,1,.32,1)}
 *{box-sizing:border-box}html,body{height:100%}
 body{margin:0;background:#161616;color:#f4f4f4;font:15px/1.45 "IBM Plex Sans",system-ui,sans-serif;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
 header,footer{display:flex;align-items:center;gap:12px;padding:8px 16px;background:#262626}
 header{flex-wrap:wrap}#title{font-weight:600;margin-right:8px;white-space:nowrap}
 #scenes{display:flex;gap:4px;flex-wrap:wrap}
-button{font:inherit;color:#f4f4f4;background:#393939;border:0;padding:6px 12px;cursor:pointer}
-button:hover{background:#525252}button:focus-visible,.hot:focus-visible{outline:2px solid #fff;outline-offset:2px}
+button{font:inherit;color:#f4f4f4;background:#393939;border:0;padding:6px 12px;cursor:pointer;transition:transform 160ms var(--ease-out),background-color 150ms ease,opacity 150ms ease}
+button:active:not(:disabled){transform:scale(.97)}
+@media(hover:hover) and (pointer:fine){button:not(.hot):hover:not(:disabled){background:#525252}#next:hover:not(:disabled),button[aria-current=true]:hover{background:#0050e6}}button:focus-visible,.hot:focus-visible{outline:2px solid #fff;outline-offset:2px}
 button[aria-current=true],#next{background:#0f62fe}button:disabled{opacity:.4;cursor:default}
 main{position:relative;display:flex;align-items:center;justify-content:center;min-width:0}
 #stage{position:relative}#stage img{display:block;user-select:none;-webkit-user-drag:none}
@@ -19,12 +20,12 @@ linear-gradient(var(--c) 0 0) 100% 0/var(--n) var(--t),linear-gradient(var(--c) 
 linear-gradient(var(--c) 0 0) 0 100%/var(--n) var(--t),linear-gradient(var(--c) 0 0) 0 100%/var(--t) var(--n),
 linear-gradient(var(--c) 0 0) 100% 100%/var(--n) var(--t),linear-gradient(var(--c) 0 0) 100% 100%/var(--t) var(--n);
 background-repeat:no-repeat;filter:drop-shadow(0 0 3px rgba(0,0,0,.55));animation:p 1.6s ease-in-out infinite}
-.hot:hover,.hot:active{outline:0;background-color:transparent}
+.hot:hover,.hot:active{outline:0;background-color:transparent}.hot:active{transform:scale(.97)}
 .hot:focus-visible{outline:2px dashed var(--c);outline-offset:4px}
 @keyframes p{50%{opacity:.55}}
-@media(prefers-reduced-motion:reduce){.hot{animation:none}}
+@media(prefers-reduced-motion:reduce){.hot{animation:none}button,.hot{transition:background-color 150ms ease,opacity 150ms ease}button:active:not(:disabled),.hot:active{transform:none}}
 #do{flex:1;min-width:0}#count{font-variant-numeric:tabular-nums;color:#c6c6c6;white-space:nowrap}
-.panel{position:fixed;right:16px;bottom:64px;width:min(440px,90vw);max-height:60vh;overflow:auto;padding:16px;background:#fff;color:#161616;font-size:17px;box-shadow:0 8px 30px #000}
+.panel{position:fixed;right:16px;bottom:64px;width:min(440px,90vw);max-height:60vh;overflow:auto;padding:16px;background:#fff;color:#161616;font-size:17px;border-radius:8px;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 12px 32px rgba(0,0,0,.45)}
 .panel kbd{font:13px ui-monospace,monospace;background:#e0e0e0;padding:1px 5px;border-radius:3px}
 .panel table{border-collapse:collapse;width:100%;font-size:15px}.panel td{padding:3px 6px;vertical-align:top}
 /* edit mode: draw a hotspot */
@@ -33,10 +34,14 @@ body.edit main{cursor:crosshair}body.edit .hot{pointer-events:none;opacity:.35;a
 #editbar{position:fixed;left:16px;bottom:64px;max-width:min(560px,90vw);padding:10px 14px;background:#ff3b30;color:#fff;font-size:14px}
 #editbar code{font:14px ui-monospace,monospace;background:rgba(0,0,0,.25);padding:2px 6px}
 @media(max-width:700px){#title{display:none}footer{flex-wrap:wrap}#do{flex-basis:100%;order:-1}}
+/* bars collapsed (H): only the screenshot */
+body.bare{grid-template-rows:minmax(0,1fr)}body.bare header,body.bare footer{display:none}
+#show{position:fixed;top:8px;right:8px;z-index:3;font-size:13px;padding:4px 10px;opacity:.35}#show:focus-visible{opacity:1}@media(hover:hover) and (pointer:fine){#show:hover{opacity:1}}
 [hidden]{display:none!important}
 </style>
 <header><span id="title"></span><nav id="scenes" aria-label="Scenes"></nav></header>
 <main><div id="stage"></div></main>
+<button id="show" hidden>Show bars (H)</button>
 <aside id="notes" class="panel" hidden></aside>
 <aside id="help" class="panel" hidden>
 <p style="margin-top:0"><b>How to use</b></p>
@@ -44,6 +49,8 @@ body.edit main{cursor:crosshair}body.edit .hot{pointer-events:none;opacity:.35;a
 <tr><td><kbd>→</kbd> or click the highlight</td><td>Next step</td></tr>
 <tr><td><kbd>←</kbd></td><td>Back</td></tr>
 <tr><td><kbd>N</kbd></td><td>Speaker notes (what to say)</td></tr>
+<tr><td><kbd>H</kbd></td><td>Hide or show the top and bottom bars</td></tr>
+<tr><td><kbd>F</kbd></td><td>Full screen on or off</td></tr>
 <tr><td><kbd>Home</kbd></td><td>First screen</td></tr>
 <tr><td><kbd>E</kbd></td><td>Edit mode: drag a box on the screen to get its hotspot values</td></tr>
 <tr><td><kbd>?</kbd></td><td>This help</td></tr>
@@ -51,7 +58,7 @@ body.edit main{cursor:crosshair}body.edit .hot{pointer-events:none;opacity:.35;a
 <p style="margin-bottom:0">Each screen has its own link: the number after <b>#</b> in the address bar.</p>
 </aside>
 <div id="editbar" hidden>Edit mode: drag a box on the screenshot. <span id="out"></span></div>
-<footer><button id="back">Back</button><span id="do"></span><span id="count"></span><button id="help-b" aria-label="Help">?</button><button id="note">Notes (N)</button><button id="next">Next</button></footer>
+<footer><button id="back">Back</button><span id="do"></span><span id="count"></span><button id="hide" title="Hide the bars (H)">Hide bars</button><button id="fs" title="Full screen (F)">Full screen</button><button id="help-b" aria-label="Help">?</button><button id="note">Notes (N)</button><button id="next">Next</button></footer>
 <script>
 const S=/*SHOTS*/[],TITLE=/*TITLEJS*/"",$=q=>document.getElementById(q);let i=0,k=0;
 $('title').textContent=TITLE;
@@ -65,6 +72,10 @@ else{const d=document.createElement('div');d.className='ph';d.textContent='Scree
 $('do').textContent=s.do;$('notes').textContent=s.say||'';$('count').textContent=(i+1)+' / '+S.length;$('back').disabled=!i;$('next').disabled=i===S.length-1;
 [...$('scenes').children].forEach(b=>b.setAttribute('aria-current',b.textContent===s.scene));
 try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
+function fs(){const d=document.documentElement;try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(d.requestFullscreen||d.webkitRequestFullscreen).call(d)}catch(e){}}
+function fsLabel(){$('fs').textContent=fsEl()?'Exit full screen':'Full screen';requestAnimationFrame(fit)}
+function bars(v){const bare=v??!document.body.classList.contains('bare');document.body.classList.toggle('bare',bare);$('show').hidden=!bare;try{localStorage.setItem('bare',bare?'1':'')}catch(e){}requestAnimationFrame(fit)}
 function mark(){const s=S[i],st=$('stage'),b=s.steps?s.steps[k]:s.hotspot;st.querySelector('.hot')?.remove();if(!b)return;const h=document.createElement('button'),[l,t,w,e]=b;h.className='hot';h.setAttribute('aria-label',s.do);h.style.setProperty('--c',s.mark||'#ffd60a');
 Object.assign(h.style,{left:`calc(${l}% - 8px)`,top:`calc(${t}% - 8px)`,width:`calc(${w}% + 16px)`,height:`calc(${e}% + 16px)`});h.onclick=fwd;st.append(h)}
 function fwd(){const s=S[i];if(s.steps&&k<s.steps.length-1){k++;mark()}else if(i<S.length-1)go(i+1)}
@@ -79,10 +90,11 @@ addEventListener('pointermove',e=>{if(!start)return;const p=pct(e),l=Math.min(st
 addEventListener('pointerup',e=>{if(!start)return;const p=pct(e),r=v=>Math.round(v*100)/100,v=[r(Math.min(start[0],p[0])),r(Math.min(start[1],p[1])),r(Math.abs(p[0]-start[0])),r(Math.abs(p[1]-start[1]))];start=null;
 const txt='"hotspot": ['+v.join(', ')+']';$('out').innerHTML='';const c=document.createElement('code');c.textContent=txt;$('out').append(c);
 try{navigator.clipboard.writeText(txt).then(()=>$('out').append(' copied'),()=>{})}catch(err){}});
-$('back').onclick=back;$('next').onclick=fwd;$('note').onclick=()=>toggle('notes');$('help-b').onclick=()=>toggle('help');
+$('back').onclick=back;$('hide').onclick=()=>bars(true);$('fs').onclick=fs;document.addEventListener('fullscreenchange',fsLabel);document.addEventListener('webkitfullscreenchange',fsLabel);$('show').onclick=()=>bars(false);$('next').onclick=fwd;$('note').onclick=()=>toggle('notes');$('help-b').onclick=()=>toggle('help');
 addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;
 if(e.key==='ArrowRight'||e.key==='PageDown')fwd();else if(e.key==='ArrowLeft'||e.key==='PageUp')back();else if(e.key==='n'||e.key==='N')toggle('notes');
-else if(e.key==='?')toggle('help');else if(e.key==='e'||e.key==='E')edit();else if(e.key==='Escape'){if(editing)edit();$('help').hidden=true}else if(e.key==='Home')go(0)});
+else if(e.key==='?')toggle('help');else if(e.key==='h'||e.key==='H')bars();else if(e.key==='f'||e.key==='F')fs();else if(e.key==='e'||e.key==='E')edit();else if(e.key==='Escape'){if(editing)edit();$('help').hidden=true}else if(e.key==='Home')go(0)});
 addEventListener('resize',fit);addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(n&&n-1!==i)go(n-1)});
+try{if(localStorage.getItem('bare'))bars(true)}catch(e){}
 go((parseInt(location.hash.slice(1))||1)-1);
 </script></html>

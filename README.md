@@ -48,15 +48,18 @@ Use it as a safe backup for a live demo, as the demo itself, or as something peo
 |---|---|
 | **→** or click the highlight | Next step |
 | **←** | Back |
+| **H** or **Hide bars** | Hide the top and bottom bars, so only the screen shows. **H** or **Show bars** brings them back. |
+| **F** or **Full screen** | Full screen on or off. **Esc** also leaves full screen. |
 | **N** | Speaker notes: what to say on this screen |
 | **Home** | First screen |
 | **?** | Help |
 | **E** | Edit mode, for authors (see [step 4](#step-4-set-the-highlights)) |
 
 - The buttons at the top jump straight to a scene.
+- With the bars hidden, the audience sees only the screenshot, not the click hint at the bottom. The choice is remembered the next time you open the file in the same browser.
 - Every screen has its own address: `click-through.html#31` opens screen 31.
 - **Close the notes before you share your screen,** or the audience sees them. Keep them on a second screen or on paper.
-- Make the browser full screen (**⌃⌘F** on Mac, **F11** on Windows) so the screenshots are as large as possible.
+- Press **F** (or **Full screen**) so the screenshots are as large as possible. Together with **H**, only the screenshot is on screen.
 
 ---
 
